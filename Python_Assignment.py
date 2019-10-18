@@ -88,8 +88,45 @@ join['timelapse']= join['review_year']-join['movie_year']
 
 data=  join.drop(['timestamp','movieId','userId','genres','datetime'], axis=1)
 data.head(20)
- 
 
+#lets look at some trend and corr plots
+features= [ 'timelapse', 'movie_year', 'review_year']
+for f in features:
+    ax=plt.subplots(figsize=(6,3))
+    ax=sb.regplot(x=data[f], y=data['rating'])
+    plt.show()
+#look at the corr matrix
+sb.heatmap(data.corr())
+#review_year/movie_year high pos corr
+#rating/movie low neg corr
+#rating/timelapse low pos corr
+ 
+#Look at distribution of variables
+sb.distplot(data.rating);
+sb.distplot(data.timelapse);
+sb.distplot(data.movie_year);
+sb.distplot(data.review_year);
+
+#Scatter plots
+#look at relation between rating and timelapse
+plt.scatter(data.rating, data.timelapse, alpha=0.5)
+plt.show()  
+#look at relation between rating and movie_year
+plt.scatter(data.rating, data.movie_year, alpha=0.5)
+plt.show() 
+
+#Since rating is categorical i want to visualize the relationship via a violin plot
+#rating and timelapse
+    ax = plt.subplots(figsize=(7, 2.5))
+    plt.xticks(rotation='vertical')
+    ax=sb.violinplot(x="rating", y="timelapse", data=data, linewidth=1)
+    plt.show() 
+
+#rating and movie_year
+        ax = plt.subplots(figsize=(7, 2.5))
+    plt.xticks(rotation='vertical')
+    ax=sb.violinplot(x="rating", y="movie_year", data=data, linewidth=1)
+    plt.show() 
 ################################SIMPLE HYPOTHESIS TEST#########################
 
 # QUESTION: Does the amount of time between when a movie is released and when someone rates it have any affect on it's rating score?
@@ -109,7 +146,9 @@ data.head(20)
         #Observations in each sample are normally distributed.
         #Observations in each sample have the same variance.
         
-#Lets first look at the covariance
+#Lets first look at the covariance    
+        
+       
 from numpy import cov
 covariance = cov(data.timelapse, data.rating)
 print(covariance)
@@ -128,7 +167,7 @@ print(covariance)
 from scipy.stats import pearsonr
 corr, p = pearsonr(data.timelapse, data.rating)
 print('Pearsons correlation: %.3f' % corr)
-#Pearsons correlation: 0.081 - very little evidence of any correlation
+#Pearsons correlation: 0.081 - very little evidence of any correlation/ low correlation
 
 #P VALUE METHOD
 print(p)
@@ -154,7 +193,7 @@ print(p)
 #In both testing methods we reject the null hypothesis that the population correlation is null 
   #Accept  alternative hypothesis that there is correlation between timelapse and rating
     
-
+#There
 
 
 
